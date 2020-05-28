@@ -1,55 +1,47 @@
 import React, {Component} from 'react';
-import { Header, MovieList, MovieDetails } from './components';
+import { Header, MovieList, MovieDetails, Loading } from './components';
+import dataMovies from './data'
 //import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      movies: [{
-        title: 'The Gliadiateur',
-        img: 'https://www.gstatic.com/tv/thumb/v22vodart/24674/p24674_v_v8_ag.jpg',
-        details: 'R | 175 min | Crime, Drama',
-        description: 'Le général romain Maximus est le plus fidèle soutien de lempereur Marc Aurèle, quil a conduit de victoire en victoire'
-      },{
-        title: 'The Wife',
-        img: 'data:image/jpeg;base64,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',
-        details: 'R | 175 min | Crime, Drama',
-        description: 'Le général romain Maximus est le plus fidèle soutien de lempereur Marc Aurèle, quil a conduit de victoire en victoire'
-      },{
-        title: 'In Space',
-        img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT1EhI7vcoLdZsBFlxbxc0cRpk3YGXq7eX96eqbJEXj7QbdLYbg&usqp=CAU',
-        details: 'R | 175 min | Crime, Drama',
-        description: 'Le général romain Maximus est le plus fidèle soutien de lempereur Marc Aurèle, quil a conduit de victoire en victoire'
-      },{
-        title: 'The Accident',
-        img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR9UQlI3zqqm7SMW_RM-0WxhusweXHU2i_Z3NxzbcWx6lEVy9LG&usqp=CAU',
-        details: 'R | 175 min | Crime, Drama',
-        description: 'Le général romain Maximus est le plus fidèle soutien de lempereur Marc Aurèle, quil a conduit de victoire en victoire'
-      }],
-      selectedMovie: 0
+      movies: null,
+      selectedMovie: 0,
+      loaded: false 
     }
+
+    setTimeout( () => {
+      this.setState({
+        movies: dataMovies,
+        loaded: true
+      })
+    }, 3000)
   }
 
-  updateSelectedMovie = (title) => {
-    const index = this.state.movies.findIndex((m) => {
-      return title === m.title;
-    })
+  updateSelectedMovie = (index) => {
     this.setState({
       selectedMovie: index
     })
   }
 
   render() {
-  return (
-    <div className="App d-flex flex-column">
-      <Header/>
-      <div className = "d-flex flex-row flex-fill pt-4 p-2">
-        <MovieList movies={ this.state.movies } updateSelectedMovie={ this.updateSelectedMovie } />
-        <MovieDetails movie={ this.state.movies[this.state.selectedMovie] } />
+    return (
+      <div className="App d-flex flex-column">
+        <Header />
+        { this.state.loaded ? (
+          <div className="d-flex flex-row flex-fill pt-4 p-2" >
+            <MovieList
+              movies={ this.state.movies }
+              updateSelectedMovie={ this.updateSelectedMovie }/>
+            <MovieDetails movie={ this.state.movies[this.state.selectedMovie] }/>
+          </div>
+        ) : (
+          <Loading />
+        )}
       </div>
-    </div>
-  );
+    );
   }
 }
 
